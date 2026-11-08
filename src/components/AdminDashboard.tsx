@@ -30,6 +30,7 @@ interface AdminDashboardProps {
   onResetEvents: () => void;
   onPreviewEvent: (event: EventItem) => void;
   onOpenQr: () => void;
+  onSyncCloud?: () => void;
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
@@ -43,6 +44,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onResetEvents,
   onPreviewEvent,
   onOpenQr,
+  onSyncCloud,
 }) => {
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [search, setSearch] = useState('');
@@ -101,6 +103,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       </header>
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+        {/* Banner de sincronització al núvol per a mòbils */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3.5 rounded-2xl bg-slate-900 border border-amber-500/25 shadow-sm text-xs">
+          <div className="flex items-center gap-2.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            <div>
+              <p className="font-bold text-white">Sincronització en temps real activa</p>
+              <p className="text-[11px] text-slate-400">Els canvis que desis es veuran immediatament a tots els telèfons mòbils dels usuaris.</p>
+            </div>
+          </div>
+          {onSyncCloud && (
+            <button
+              onClick={onSyncCloud}
+              className="px-3.5 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-all active:scale-95 shrink-0 self-end sm:self-auto"
+            >
+              Sincronitzar ara
+            </button>
+          )}
+        </div>
+
         {/* Quick KPI stats row */}
         <div className="grid grid-cols-3 gap-3">
           <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-sm text-center">

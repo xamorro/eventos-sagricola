@@ -1,4 +1,4 @@
-export function processAndResizeImage(file: File, maxWidth = 1200, quality = 0.82): Promise<string> {
+export function processAndResizeImage(file: File, maxWidth = 850, quality = 0.72): Promise<string> {
   return new Promise((resolve, reject) => {
     // If not an image, reject
     if (!file.type.startsWith('image/')) {

@@ -94,7 +94,7 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
 
     try {
       setIsProcessingImage(true);
-      const optimizedBase64 = await processAndResizeImage(file, 1200, 0.82);
+      const optimizedBase64 = await processAndResizeImage(file);
       setImageUrl(optimizedBase64);
       setErrors((prev) => ({ ...prev, image: '' }));
     } catch (err: unknown) {
