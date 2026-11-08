@@ -16,8 +16,15 @@ export const ClientView: React.FC<ClientViewProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
-  // ONLY show events with status === 'active' for clients
-  const activeEvents = events.filter((evt) => evt.status === 'active');
+  // ONLY show events with status === 'active' for clients,
+  // Ordenats per data: els més propers surten primer
+  const activeEvents = events
+    .filter((evt) => evt.status === 'active')
+    .sort((a, b) => {
+      const dateTimeA = new Date(`${a.date}T${a.time || '00:00'}`).getTime();
+      const dateTimeB = new Date(`${b.date}T${b.time || '00:00'}`).getTime();
+      return dateTimeA - dateTimeB;
+    });
 
   const filteredEvents = activeEvents.filter((evt) => {
     if (!searchQuery.trim()) return true;

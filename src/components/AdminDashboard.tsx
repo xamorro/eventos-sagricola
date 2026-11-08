@@ -51,15 +51,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const activeCount = events.filter((e) => e.status === 'active').length;
   const inactiveCount = events.filter((e) => e.status === 'inactive').length;
 
-  const filteredEvents = events.filter((evt) => {
-    const matchesFilter =
-      filter === 'all' ? true : evt.status === filter;
-    const matchesSearch =
-      evt.title.toLowerCase().includes(search.toLowerCase()) ||
-      evt.shortDescription.toLowerCase().includes(search.toLowerCase()) ||
-      evt.category.toLowerCase().includes(search.toLowerCase());
-    return matchesFilter && matchesSearch;
-  });
+  const filteredEvents = events
+    .filter((evt) => {
+      const matchesFilter =
+        filter === 'all' ? true : evt.status === filter;
+      const matchesSearch =
+        evt.title.toLowerCase().includes(search.toLowerCase()) ||
+        evt.shortDescription.toLowerCase().includes(search.toLowerCase()) ||
+        evt.category.toLowerCase().includes(search.toLowerCase());
+      return matchesFilter && matchesSearch;
+    })
+    .sort((a, b) => {
+      const dateTimeA = new Date(`${a.date}T${a.time || '00:00'}`).getTime();
+      const dateTimeB = new Date(`${b.date}T${b.time || '00:00'}`).getTime();
+      return dateTimeA - dateTimeB;
+    });
 
   const confirmDelete = (id: string) => {
     onDeleteEvent(id);
