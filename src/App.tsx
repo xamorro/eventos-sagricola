@@ -146,17 +146,12 @@ export const App: React.FC = () => {
       {viewMode === 'client' ? (
         <>
           {/* Mobile client view with header and vertical card feed */}
-          <Header
-            onOpenQr={() => setIsQrModalOpen(true)}
-            onOpenAdminAuth={() => setIsAdminAuthModalOpen(true)}
-            activeCount={activeCount}
-          />
+          <Header activeCount={activeCount} />
 
           <ClientView
             events={events}
             onSelectEvent={(evt) => setSelectedEvent(evt)}
             onOpenAdminAuth={() => setIsAdminAuthModalOpen(true)}
-            onOpenQr={() => setIsQrModalOpen(true)}
           />
         </>
       ) : (
@@ -177,6 +172,7 @@ export const App: React.FC = () => {
           onLogout={handleLogout}
           onResetEvents={handleResetEvents}
           onPreviewEvent={(evt) => setSelectedEvent(evt)}
+          onOpenQr={() => setIsQrModalOpen(true)}
         />
       )}
 

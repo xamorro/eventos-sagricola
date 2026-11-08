@@ -242,14 +242,14 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, onShowTo
             </p>
           </div>
 
-          {/* Social / Table share actions */}
+          {/* Share & Calendar actions */}
           <div className="pt-2 flex items-center gap-2">
             <button
               onClick={handleShare}
               className="flex-1 py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all active:scale-98"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5" />}
-              {copied ? '¡Copiado!' : 'Compartir con la mesa'}
+              {copied ? '¡Copiado!' : 'Compartir evento'}
             </button>
 
             <button

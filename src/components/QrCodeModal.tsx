@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, QrCode, Sparkles, Smartphone, Download } from 'lucide-react';
+import { X, QrCode, Download, ExternalLink } from 'lucide-react';
 
 interface QrCodeModalProps {
   isOpen: boolean;
@@ -9,10 +9,11 @@ interface QrCodeModalProps {
 export const QrCodeModal: React.FC<QrCodeModalProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
-  const currentUrl = window.location.href;
-  const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(
-    currentUrl
-  )}&bgcolor=ffffff&color=0f172a&margin=10`;
+  // Clean public URL without any hash
+  const publicUrl = window.location.origin + window.location.pathname;
+  const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(
+    publicUrl
+  )}&bgcolor=ffffff&color=0f172a&margin=12`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
@@ -31,49 +32,51 @@ export const QrCodeModal: React.FC<QrCodeModalProps> = ({ isOpen, onClose }) => 
           <X className="w-5 h-5" />
         </button>
 
-        <div className="w-12 h-12 rounded-2xl bg-brand-500/10 border border-brand-500/20 text-brand-400 flex items-center justify-center mx-auto mb-3">
+        <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mx-auto mb-3">
           <QrCode className="w-6 h-6" />
         </div>
 
-        <h2 className="text-xl font-bold text-white tracking-tight">QR de Mesa #4</h2>
+        <h2 className="text-xl font-bold text-white tracking-tight">Código QR de la Web</h2>
         <p className="text-xs text-slate-400 mt-1">
-          Escanea desde otro smartphone para probar la experiencia móvil en mesa.
+          Descarga este código QR para imprimirlo en cartelería o compartir el enlace público.
         </p>
 
-        {/* QR Code Container styled like a real restaurant table stand */}
-        <div className="mt-5 p-4 rounded-2xl bg-white shadow-xl mx-auto inline-block border-4 border-amber-500/40">
+        {/* QR Code Container styled with official branding */}
+        <div className="mt-5 p-4 rounded-2xl bg-white shadow-xl mx-auto inline-block border-2 border-slate-200">
           <img
             src={qrApiUrl}
-            alt="Código QR de mesa para eventos"
+            alt="Código QR de la web de eventos"
             className="w-52 h-52 mx-auto rounded-lg"
           />
-          <div className="mt-2 pt-2 border-t border-slate-200 flex items-center justify-center gap-1.5 text-[11px] font-bold text-slate-800">
-            <Sparkles className="w-3.5 h-3.5 text-brand-600" />
-            <span>S'Agrícola • Eventos en Vivo</span>
+          <div className="mt-3 pt-2 border-t border-slate-200 flex items-center justify-center gap-2">
+            <img src="./logo.png" alt="Logo" className="h-6 w-auto object-contain" />
+            <span className="text-xs font-bold text-slate-800">
+              S'Agrícola • 1899
+            </span>
           </div>
         </div>
 
-        <div className="mt-5 flex items-center justify-center gap-2 text-xs text-slate-400">
-          <Smartphone className="w-4 h-4 text-emerald-400 shrink-0" />
-          <span>Abre la cámara de tu móvil para escanear</span>
-        </div>
+        <p className="mt-3 text-[11px] text-slate-500 font-mono truncate px-2">
+          {publicUrl}
+        </p>
 
-        <div className="mt-4 pt-3 border-t border-slate-800 flex gap-2">
+        <div className="mt-5 flex gap-2">
           <a
             href={qrApiUrl}
-            download="qr-mesa-sagricola.png"
+            download="qr-eventos-sagricola.png"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+            className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-brand-500 hover:from-amber-400 hover:to-brand-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 shadow-lg transition-all"
           >
-            <Download className="w-3.5 h-3.5" />
+            <Download className="w-4 h-4" />
             <span>Descargar QR</span>
           </a>
           <button
-            onClick={onClose}
-            className="flex-1 py-2.5 px-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold transition-colors"
+            onClick={() => window.open(publicUrl, '_blank')}
+            className="p-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors"
+            title="Abrir enlace público"
           >
-            Entendido
+            <ExternalLink className="w-4 h-4" />
           </button>
         </div>
       </div>

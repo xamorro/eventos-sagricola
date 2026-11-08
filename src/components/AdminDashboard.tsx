@@ -13,7 +13,8 @@ import {
   Search,
   ExternalLink,
   ShieldCheck,
-  AlertTriangle
+  AlertTriangle,
+  QrCode
 } from 'lucide-react';
 import { EventItem } from '../types';
 import { formatEventDate } from '../utils/date';
@@ -28,6 +29,7 @@ interface AdminDashboardProps {
   onLogout: () => void;
   onResetEvents: () => void;
   onPreviewEvent: (event: EventItem) => void;
+  onOpenQr: () => void;
 }
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
@@ -40,6 +42,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   onLogout,
   onResetEvents,
   onPreviewEvent,
+  onOpenQr,
 }) => {
   const [filter, setFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [search, setSearch] = useState('');
@@ -76,10 +79,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <span>Vista Cliente</span>
           </button>
 
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <h1 className="text-xs sm:text-sm font-extrabold tracking-wide uppercase text-brand-400 flex items-center gap-1">
-              <ShieldCheck className="w-4 h-4" />
+          <div className="flex items-center gap-2">
+            <img src="./logo.png" alt="Logo" className="h-6 w-auto object-contain" />
+            <h1 className="text-xs sm:text-sm font-extrabold tracking-wide uppercase text-amber-400 flex items-center gap-1">
+              <ShieldCheck className="w-4 h-4 text-brand-400" />
               Panel de Control
             </h1>
           </div>
@@ -112,14 +115,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
         </div>
 
-        {/* Primary CTA: Big 'Crear nuevo evento' touch-friendly button */}
-        <button
-          onClick={onCreateNew}
-          className="w-full py-4 px-5 rounded-2xl bg-gradient-to-r from-brand-600 via-brand-500 to-amber-500 hover:from-brand-500 hover:to-amber-400 text-white font-extrabold text-base shadow-xl shadow-brand-500/20 flex items-center justify-center gap-2.5 transition-all active:scale-[0.98]"
-        >
-          <Plus className="w-5 h-5 stroke-[2.5]" />
-          <span>Crear Nuevo Evento</span>
-        </button>
+        {/* Primary CTAs: Crear Evento & Descargar QR */}
+        <div className="flex gap-2.5">
+          <button
+            onClick={onCreateNew}
+            className="flex-1 py-4 px-5 rounded-2xl bg-gradient-to-r from-brand-600 via-brand-500 to-amber-500 hover:from-brand-500 hover:to-amber-400 text-white font-extrabold text-base shadow-xl shadow-brand-500/20 flex items-center justify-center gap-2.5 transition-all active:scale-[0.98]"
+          >
+            <Plus className="w-5 h-5 stroke-[2.5]" />
+            <span>Crear Nuevo Evento</span>
+          </button>
+
+          <button
+            onClick={onOpenQr}
+            className="py-4 px-4 rounded-2xl bg-slate-800 hover:bg-slate-700 text-amber-400 hover:text-amber-300 border border-slate-700/80 shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-[0.98]"
+            title="Ver y descargar Código QR de la Web"
+          >
+            <QrCode className="w-5 h-5" />
+            <span className="text-xs font-bold hidden sm:inline">QR Web</span>
+          </button>
+        </div>
 
         {/* Search bar & filter pills */}
         <div className="space-y-3">
