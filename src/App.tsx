@@ -40,17 +40,17 @@ export const App: React.FC = () => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  // Assegurar neteja d'estat inicial, suport de botó enrere i sincronització amb el núvol
+  // Inicialització, suport de botó enrere i càrrega des del servidor
   useEffect(() => {
     setIsAdminAuthModalOpen(false);
     if (window.location.hash && !window.location.hash.startsWith('#acte')) {
       window.history.replaceState(null, '', window.location.pathname);
     }
 
-    // Carregar i sincronitzar amb el núvol per compartir amb tots els dispositius
-    storage.syncWithCloud(events).then((synced) => {
-      if (synced && Array.isArray(synced) && synced.length > 0) {
-        setEvents(synced);
+    // Carregar directament des del servidor central
+    storage.fetchEvents().then((serverEvents) => {
+      if (serverEvents && Array.isArray(serverEvents) && serverEvents.length > 0) {
+        setEvents(serverEvents);
       }
     });
 
@@ -63,38 +63,25 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-  // Actualitzar quan la pantalla es reactiva o torna a tenir focus
+  // Actualitzar quan la pantalla torna a tenir focus
   useEffect(() => {
     const handleVisibility = () => {
       if (document.visibilityState === 'visible') {
-        storage.syncWithCloud(events).then((synced) => {
-          if (synced && Array.isArray(synced) && synced.length > 0) {
-            setEvents(synced);
+        storage.fetchEvents().then((serverEvents) => {
+          if (serverEvents && Array.isArray(serverEvents) && serverEvents.length > 0) {
+            setEvents(serverEvents);
           }
         });
       }
     };
     window.addEventListener('visibilitychange', handleVisibility);
     return () => window.removeEventListener('visibilitychange', handleVisibility);
-  }, [events]);
+  }, []);
 
-  // Persist events whenever they change
+  // Persistir esdeveniments tant a memòria local com al servidor
   const updateEventsState = (newEvents: EventItem[]) => {
     setEvents(newEvents);
     storage.saveEvents(newEvents);
-  };
-
-  const handleManualSync = async () => {
-    showToast('Sincronitzant amb el núvol per als mòbils...', 'info');
-    try {
-      const synced = await storage.syncWithCloud(events);
-      if (synced && Array.isArray(synced)) {
-        setEvents(synced);
-        showToast('Actes sincronitzats amb èxit per a tots els telèfons!', 'success');
-      }
-    } catch {
-      showToast('Error de connexió al núvol', 'error');
-    }
   };
 
   const handleSelectEvent = (event: EventItem) => {
@@ -251,7 +238,6 @@ export const App: React.FC = () => {
           onResetEvents={handleResetEvents}
           onPreviewEvent={handleSelectEvent}
           onOpenQr={() => setIsQrModalOpen(true)}
-          onSyncCloud={handleManualSync}
         />
       )}
 

@@ -69,6 +69,23 @@ export const INITIAL_EVENTS: EventItem[] = [
     capacity: 'Fins a completar aforament',
     createdAt: new Date().toISOString(),
   },
+  {
+    id: 'evt-5',
+    title: 'Imatges Botiga de Fotografia',
+    shortDescription: 'Tenda fotogràfica',
+    longDescription: 'Hola, aixó es una prova',
+    date: '2026-11-10',
+    time: '11:30',
+    imageUrl: './events/botiga-fotografia.jpg',
+    externalUrl: 'https://sagricola.es',
+    showExternalButton: true,
+    status: 'active',
+    category: 'Altres',
+    location: 'Arago 1',
+    price: 'Entrada lliure',
+    capacity: '',
+    createdAt: new Date().toISOString(),
+  },
 ];
 
 export const CATEGORIES = ['Tots', 'Música', 'Gastronomia', 'Oci i Cultura', 'Festa', 'Altres'];

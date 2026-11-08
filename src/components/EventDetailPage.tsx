@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { 
   ArrowLeft, 
-  Calendar, 
   Clock, 
   MapPin, 
   ExternalLink, 
   Share2, 
-  Ticket, 
   Users, 
   Sparkles, 
   CalendarPlus, 
-  Check,
-  Layers
+  Check
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { EventItem } from '../types';
@@ -23,15 +20,12 @@ interface EventDetailPageProps {
   onShowToast: (text: string, type: 'success' | 'info' | 'error') => void;
 }
 
-export type LayoutBoceto = 'dual-cards' | 'ticket-pass' | 'editorial-list';
-
 export const EventDetailPage: React.FC<EventDetailPageProps> = ({
   event,
   onBack,
   onShowToast,
 }) => {
   const [copied, setCopied] = useState(false);
-  const [boceto, setBoceto] = useState<LayoutBoceto>('ticket-pass');
   const daysBadge = getDaysRemainingBadge(event.date);
   const dateParts = getEventDateParts(event.date);
 
@@ -134,49 +128,6 @@ export const EventDetailPage: React.FC<EventDetailPageProps> = ({
         </div>
       </header>
 
-      {/* Selector de Bocetos per triar */}
-      <div className="bg-slate-900/90 border-b border-amber-500/20 py-2.5 px-4 sticky top-14 z-20 backdrop-blur-md">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5 text-xs text-amber-400 font-bold">
-            <Layers className="w-4 h-4" />
-            <span>Tria el disseny que més t'agradi:</span>
-          </div>
-
-          <div className="flex items-center gap-1.5 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs font-semibold w-full sm:w-auto">
-            <button
-              onClick={() => setBoceto('ticket-pass')}
-              className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg transition-all ${
-                boceto === 'ticket-pass'
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Bocet 1: Pass Cultural
-            </button>
-            <button
-              onClick={() => setBoceto('dual-cards')}
-              className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg transition-all ${
-                boceto === 'dual-cards'
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Bocet 2: Targeta Dual
-            </button>
-            <button
-              onClick={() => setBoceto('editorial-list')}
-              className={`flex-1 sm:flex-none px-3 py-1.5 rounded-lg transition-all ${
-                boceto === 'editorial-list'
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
-                  : 'text-slate-400 hover:text-white'
-              }`}
-            >
-              Bocet 3: Llista Neta
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* Main page content */}
       <main className="max-w-4xl mx-auto w-full px-4 sm:px-6 py-6 space-y-6 flex-1">
         {/* Hero image card */}
@@ -222,156 +173,60 @@ export const EventDetailPage: React.FC<EventDetailPageProps> = ({
         </div>
 
         {/* ======================================================== */}
-        {/* DISTRIBUCIÓ METADATA: 3 BOCETOS DISPONIBLES               */}
+        {/* DISTRIBUCIÓ METADATA: PASS CULTURAL AMB DATA DESTACADA   */}
         {/* ======================================================== */}
-
-        {/* BOCETO 1: PASS CULTURAL / ENTRADA AMB DATA DESTACADA */}
-        {boceto === 'ticket-pass' && (
-          <div className="rounded-3xl bg-slate-900/95 border border-amber-500/30 overflow-hidden shadow-xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in">
-            <div className="flex items-center gap-4">
-              {/* Calendari tipus full destacat */}
-              <div className="w-16 h-20 rounded-2xl bg-gradient-to-b from-amber-500 to-amber-600 p-0.5 text-center shadow-lg shadow-amber-500/10 shrink-0">
-                <div className="bg-slate-950 rounded-[14px] h-full flex flex-col items-center justify-center py-1">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-400">
-                    {dateParts.month || 'DATA'}
-                  </span>
-                  <span className="text-2xl font-black text-white leading-none my-0.5">
-                    {dateParts.day || '--'}
-                  </span>
-                  <span className="text-[10px] font-bold text-slate-400">
-                    {dateParts.weekday || ''}
-                  </span>
-                </div>
-              </div>
-
-              {/* Informació d'horari i lloc */}
-              <div className="space-y-1">
-                <p className="text-base sm:text-lg font-bold text-white capitalize leading-snug">
-                  {formatEventDateFull(event.date)}
-                </p>
-                <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-slate-300">
-                  <span className="flex items-center gap-1.5 text-amber-400 font-bold">
-                    <Clock className="w-4 h-4" />
-                    <span>{event.time} h</span>
-                  </span>
-                  {event.location && (
-                    <>
-                      <span className="text-slate-600">•</span>
-                      <span className="flex items-center gap-1.5 text-slate-200">
-                        <MapPin className="w-4 h-4 text-blue-400" />
-                        <span>{event.location}</span>
-                      </span>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Preu destacat a la dreta */}
-            {event.price && (
-              <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 sm:border-l border-slate-800 pt-3 sm:pt-0 sm:pl-6 gap-1 shrink-0">
-                <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
-                  Preu d'accés
+        <div className="rounded-3xl bg-slate-900/95 border border-amber-500/30 overflow-hidden shadow-xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in">
+          <div className="flex items-center gap-4">
+            {/* Calendari tipus full destacat */}
+            <div className="w-16 h-20 rounded-2xl bg-gradient-to-b from-amber-500 to-amber-600 p-0.5 text-center shadow-lg shadow-amber-500/10 shrink-0">
+              <div className="bg-slate-950 rounded-[14px] h-full flex flex-col items-center justify-center py-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-amber-400">
+                  {dateParts.month || 'DATA'}
                 </span>
-                <span className="text-sm sm:text-base font-black text-emerald-400 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30">
-                  {event.price}
+                <span className="text-2xl font-black text-white leading-none my-0.5">
+                  {dateParts.day || '--'}
+                </span>
+                <span className="text-[10px] font-bold text-slate-400">
+                  {dateParts.weekday || ''}
                 </span>
               </div>
-            )}
-          </div>
-        )}
-
-        {/* BOCETO 2: TARGETA DUAL (QUAN ÉS? + ON ÉS?) */}
-        {boceto === 'dual-cards' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 animate-fade-in">
-            {/* Bloc Quan és */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 flex items-center gap-3.5 shadow-md">
-              <div className="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
-                <Calendar className="w-6 h-6" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Dia i Hora</p>
-                <p className="text-sm sm:text-base font-bold text-white capitalize truncate">
-                  {formatEventDateFull(event.date)}
-                </p>
-                <p className="text-xs sm:text-sm font-semibold text-amber-400 flex items-center gap-1 mt-0.5">
-                  <Clock className="w-3.5 h-3.5" />
-                  <span>A les {event.time} h</span>
-                </p>
-              </div>
             </div>
 
-            {/* Bloc On és i Preu */}
-            <div className="p-4 sm:p-5 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between gap-3 shadow-md">
-              <div className="flex items-center gap-3.5 min-w-0">
-                <div className="w-12 h-12 rounded-2xl bg-blue-500/15 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0">
-                  <MapPin className="w-6 h-6" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Ubicació</p>
-                  <p className="text-sm sm:text-base font-bold text-white truncate">
-                    {event.location || "S'Agrícola"}
-                  </p>
-                  <p className="text-xs text-slate-400">S'Agrícola • Manacor</p>
-                </div>
-              </div>
-
-              {event.price && (
-                <div className="px-3.5 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs sm:text-sm font-bold shrink-0">
-                  {event.price}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* BOCETO 3: LLISTA NETA EDITORIAL MINIMALISTA */}
-        {boceto === 'editorial-list' && (
-          <div className="rounded-3xl bg-slate-900/80 border border-slate-800 divide-y divide-slate-800/80 shadow-md animate-fade-in overflow-hidden">
-            <div className="p-4 flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0">
-                <Calendar className="w-5 h-5" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[11px] uppercase tracking-wider font-bold text-slate-400">Dia i Hora</p>
-                <p className="text-sm sm:text-base font-bold text-white capitalize">
-                  {formatEventDateFull(event.date)} <span className="text-amber-400 ml-1 font-semibold">a les {event.time} h</span>
-                </p>
+            {/* Informació d'horari i lloc */}
+            <div className="space-y-1">
+              <p className="text-base sm:text-lg font-bold text-white capitalize leading-snug">
+                {formatEventDateFull(event.date)}
+              </p>
+              <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-slate-300">
+                <span className="flex items-center gap-1.5 text-amber-400 font-bold">
+                  <Clock className="w-4 h-4" />
+                  <span>{event.time} h</span>
+                </span>
+                {event.location && (
+                  <>
+                    <span className="text-slate-600">•</span>
+                    <span className="flex items-center gap-1.5 text-slate-200">
+                      <MapPin className="w-4 h-4 text-blue-400" />
+                      <span>{event.location}</span>
+                    </span>
+                  </>
+                )}
               </div>
             </div>
-
-            {event.location && (
-              <div className="p-4 flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/15 text-blue-400 flex items-center justify-center shrink-0">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[11px] uppercase tracking-wider font-bold text-slate-400">Lloc de trobada</p>
-                  <p className="text-sm sm:text-base font-bold text-white">
-                    {event.location} <span className="text-slate-400 text-xs font-normal">• S'Agrícola</span>
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {event.price && (
-              <div className="p-4 flex items-center justify-between gap-3.5">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center shrink-0">
-                    <Ticket className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <p className="text-[11px] uppercase tracking-wider font-bold text-slate-400">Preu d'accés</p>
-                    <p className="text-sm sm:text-base font-bold text-emerald-400">
-                      {event.price}
-                    </p>
-                  </div>
-                </div>
-                <span className="text-xs text-slate-400">Accés públic</span>
-              </div>
-            )}
           </div>
-        )}
+
+          {/* Preu destacat a la dreta */}
+          {event.price && (
+            <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center border-t sm:border-t-0 sm:border-l border-slate-800 pt-3 sm:pt-0 sm:pl-6 gap-1 shrink-0">
+              <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                Preu d'accés
+              </span>
+              <span className="text-sm sm:text-base font-black text-emerald-400 px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30">
+                {event.price}
+              </span>
+            </div>
+          )}
+        </div>
 
         {/* Capacity notice */}
         {event.capacity && (
