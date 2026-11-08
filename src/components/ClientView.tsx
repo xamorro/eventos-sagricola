@@ -122,9 +122,7 @@ export const ClientView: React.FC<ClientViewProps> = ({
           <div className="flex items-center gap-2 text-xs text-slate-500">
             <span className="font-semibold text-slate-400">S'Agrícola</span>
             <span>•</span>
-            <span>Fundada a 1899</span>
-            <span>•</span>
-            <span>Manacor, Mallorca</span>
+            <span>Plaça de Sa Bassa, 4, 07500 Manacor</span>
           </div>
 
           {/* Discreet admin access button in footer */}
