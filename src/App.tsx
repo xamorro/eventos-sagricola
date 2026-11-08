@@ -39,19 +39,12 @@ export const App: React.FC = () => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  // Listen to hash change (e.g. #admin or /admin route simulation)
+  // Netetjar qualsevol hash antic de la URL en carregar la pàgina
   useEffect(() => {
-    const checkHash = () => {
-      if (window.location.hash === '#admin' || window.location.pathname.includes('/admin')) {
-        if (viewMode !== 'admin') {
-          setIsAdminAuthModalOpen(true);
-        }
-      }
-    };
-    checkHash();
-    window.addEventListener('hashchange', checkHash);
-    return () => window.removeEventListener('hashchange', checkHash);
-  }, [viewMode]);
+    if (window.location.hash) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, []);
 
   // Persist events whenever they change
   const updateEventsState = (newEvents: EventItem[]) => {
@@ -126,13 +119,11 @@ export const App: React.FC = () => {
   const handleAdminLoginSuccess = () => {
     setIsAdminAuthModalOpen(false);
     setViewMode('admin');
-    window.location.hash = 'admin';
     showToast('Accés concedit al Tauler de Gestió', 'success');
   };
 
   const handleLogout = () => {
     setViewMode('client');
-    window.location.hash = '';
     showToast('Heu sortit del mode d\'administració', 'info');
   };
 
