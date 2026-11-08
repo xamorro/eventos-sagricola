@@ -59,3 +59,22 @@ export function getDaysRemainingBadge(dateString: string): { label: string; isUr
     return null;
   }
 }
+
+export function getEventDateParts(dateString: string): { day: string; month: string; weekday: string; year: string } {
+  if (!dateString) return { day: '', month: '', weekday: '', year: '' };
+  try {
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+    const dayStr = String(day);
+    const monthStr = new Intl.DateTimeFormat('ca-ES', { month: 'short' }).format(date).toUpperCase().replace('.', '');
+    const weekdayStr = new Intl.DateTimeFormat('ca-ES', { weekday: 'short' }).format(date);
+    return {
+      day: dayStr,
+      month: monthStr,
+      weekday: weekdayStr.charAt(0).toUpperCase() + weekdayStr.slice(1),
+      year: String(year),
+    };
+  } catch {
+    return { day: '', month: '', weekday: '', year: '' };
+  }
+}
