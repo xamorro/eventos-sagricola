@@ -42,33 +42,31 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, onShowTo
   if (!event) return null;
 
   const handleExternalAction = () => {
-    // Launch a celebratory confetti burst for mobile delight
     try {
       confetti({
         particleCount: 50,
         spread: 60,
         origin: { y: 0.8 },
-        colors: ['#f97316', '#fb923c', '#fbbf24', '#38bdf8'],
+        colors: ['#f59e0b', '#d97706', '#3b82f6', '#10b981'],
       });
     } catch {
       // ignore
     }
 
-    // Open external URL
     if (event.externalUrl) {
       const url = event.externalUrl.startsWith('http')
         ? event.externalUrl
         : `https://${event.externalUrl}`;
       window.open(url, '_blank', 'noopener,noreferrer');
     } else {
-      onShowToast('Enlace externo no especificado', 'info');
+      onShowToast('Enllaç extern no disponible', 'info');
     }
   };
 
   const handleShare = async () => {
     const shareData = {
       title: event.title,
-      text: `${event.title} en S'Agrícola (${event.date} a las ${event.time}h). ¡No te lo pierdas!`,
+      text: `${event.title} a S'Agrícola (${event.date} a les ${event.time} h). No t'ho perdis!`,
       url: window.location.href,
     };
 
@@ -76,7 +74,7 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, onShowTo
       try {
         await navigator.share(shareData);
       } catch {
-        // user canceled or unsupported
+        // user canceled
       }
     } else {
       try {
@@ -84,10 +82,10 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, onShowTo
           `${event.title} - S'Agrícola: ${window.location.href}`
         );
         setCopied(true);
-        onShowToast('¡Enlace copiado al portapapeles!', 'success');
+        onShowToast('Enllaç copiat al porta-retalls!', 'success');
         setTimeout(() => setCopied(false), 2500);
       } catch {
-        onShowToast('No se pudo copiar el enlace', 'error');
+        onShowToast('No s\'ha pogut copiar l\'enllaç', 'error');
       }
     }
   };
@@ -102,14 +100,14 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, onShowTo
       const endDate = `${year}${month}${day}T${endHour}${minute}00`;
       
       const title = encodeURIComponent(event.title);
-      const details = encodeURIComponent(`${event.shortDescription}\n\nUbicación: ${event.location || "S'Agrícola"}`);
-      const location = encodeURIComponent(`S'Agrícola Bar & Social Club, ${event.location || ''}`);
+      const details = encodeURIComponent(`${event.shortDescription}\n\nLloc: ${event.location || "S'Agrícola"}`);
+      const location = encodeURIComponent(`S'Agrícola, ${event.location || 'Manacor'}`);
 
       const googleCalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDate}/${endDate}&details=${details}&location=${location}`;
       window.open(googleCalUrl, '_blank', 'noopener,noreferrer');
-      onShowToast('Abriendo Google Calendar...', 'info');
+      onShowToast('Obrint Google Calendar...', 'info');
     } catch {
-      onShowToast('Error al generar enlace de calendario', 'error');
+      onShowToast('Error en generar l\'enllaç del calendari', 'error');
     }
   };
 
@@ -122,7 +120,7 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, onShowTo
         aria-hidden="true" 
       />
 
-      {/* Modal Dialog Card (Mobile Bottom Sheet / Centered card) */}
+      {/* Modal Dialog Card */}
       <div 
         role="dialog"
         aria-modal="true"
@@ -146,16 +144,16 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, onShowTo
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-2.5 rounded-full bg-slate-900/80 hover:bg-slate-800 text-white border border-white/10 shadow-lg backdrop-blur-md transition-all active:scale-95"
-            aria-label="Cerrar modal"
+            aria-label="Tancar modal"
           >
             <X className="w-5 h-5" />
           </button>
 
           {/* Category Pill */}
           <div className="absolute top-4 left-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/90 text-white shadow-md backdrop-blur-md border border-brand-400/30">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500 text-slate-950 shadow-md backdrop-blur-md border border-amber-400">
               <Sparkles className="w-3.5 h-3.5" />
-              {event.category || 'Evento'}
+              {event.category || 'Acte'}
             </span>
           </div>
 
@@ -172,11 +170,11 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, onShowTo
           {/* Metadata badges row */}
           <div className="grid grid-cols-2 gap-2.5">
             <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-slate-800/80 border border-slate-700/50">
-              <div className="p-2 rounded-xl bg-brand-500/10 text-brand-400 shrink-0">
+              <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 shrink-0">
                 <Calendar className="w-4 h-4" />
               </div>
               <div className="min-w-0">
-                <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Fecha</p>
+                <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Data</p>
                 <p className="text-xs sm:text-sm font-bold text-white truncate">
                   {formatEventDateFull(event.date)}
                 </p>
@@ -184,7 +182,7 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, onShowTo
             </div>
 
             <div className="flex items-center gap-2.5 p-3 rounded-2xl bg-slate-800/80 border border-slate-700/50">
-              <div className="p-2 rounded-xl bg-brand-500/10 text-brand-400 shrink-0">
+              <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400 shrink-0">
                 <Clock className="w-4 h-4" />
               </div>
               <div className="min-w-0">
@@ -201,7 +199,7 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, onShowTo
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Lugar</p>
+                  <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Lloc</p>
                   <p className="text-xs sm:text-sm font-bold text-white truncate">
                     {event.location}
                   </p>
@@ -215,7 +213,7 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, onShowTo
                   <Ticket className="w-4 h-4" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Precio</p>
+                  <p className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">Preu</p>
                   <p className="text-xs sm:text-sm font-bold text-emerald-400 truncate">
                     {event.price}
                   </p>
@@ -235,7 +233,7 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, onShowTo
           {/* Full description */}
           <div className="space-y-2">
             <h3 className="text-xs uppercase tracking-wider font-bold text-slate-400">
-              Acerca de este evento
+              Sobre aquest acte
             </h3>
             <p className="text-sm sm:text-base text-slate-200 leading-relaxed whitespace-pre-line font-normal">
               {event.longDescription || event.shortDescription}
@@ -249,28 +247,28 @@ export const EventModal: React.FC<EventModalProps> = ({ event, onClose, onShowTo
               className="flex-1 py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all active:scale-98"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Share2 className="w-3.5 h-3.5" />}
-              {copied ? '¡Copiado!' : 'Compartir evento'}
+              {copied ? 'Copiat!' : 'Compartir acte'}
             </button>
 
             <button
               onClick={handleAddToCalendar}
               className="py-2.5 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border border-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all active:scale-98"
-              title="Guardar en Google Calendar"
+              title="Afegir a Google Calendar"
             >
-              <CalendarPlus className="w-3.5 h-3.5 text-brand-400" />
-              <span>Calendario</span>
+              <CalendarPlus className="w-3.5 h-3.5 text-amber-400" />
+              <span>Calendari</span>
             </button>
           </div>
         </div>
 
-        {/* Modal Sticky Bottom Action Area (Big Mobile-First Buttons) */}
+        {/* Modal Sticky Bottom Action Area */}
         <div className="p-4 sm:p-5 bg-slate-950/90 border-t border-slate-800 backdrop-blur-md shrink-0">
           <button
             onClick={handleExternalAction}
-            className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-brand-600 via-brand-500 to-amber-500 hover:from-brand-500 hover:to-amber-400 text-white font-extrabold text-base sm:text-lg shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2.5 transition-all transform active:scale-[0.98] group"
+            className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-600 to-brand-600 hover:from-amber-400 hover:to-brand-500 text-slate-950 font-extrabold text-base sm:text-lg shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2.5 transition-all transform active:scale-[0.98] group"
           >
-            <span>Saber más / Apuntarse</span>
-            <ExternalLink className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            <span>Saber-ne més / Apuntar-se</span>
+            <ExternalLink className="w-5 h-5 text-slate-950 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </button>
         </div>
       </div>

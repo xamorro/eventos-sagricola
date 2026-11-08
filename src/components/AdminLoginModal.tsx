@@ -33,10 +33,21 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
   };
 
   const handleKeypadPress = (digit: string) => {
-    if (pin.length < 6) {
+    if (pin.length < 4) {
       const nextPin = pin + digit;
       setPin(nextPin);
       setError(false);
+      // Auto-submit when 4 digits are entered
+      if (nextPin.length === 4) {
+        if (onVerifyPin(nextPin)) {
+          setError(false);
+          setPin('');
+          onSuccess();
+        } else {
+          setError(true);
+          setPin('');
+        }
+      }
     }
   };
 
@@ -58,36 +69,36 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-          aria-label="Cerrar"
+          aria-label="Tancar"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
         <div className="text-center">
-          <div className="w-14 h-14 rounded-2xl bg-brand-500/10 border border-brand-500/20 text-brand-400 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-brand-500/10">
+          <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mx-auto mb-3 shadow-lg shadow-amber-500/10">
             <Lock className="w-7 h-7" />
           </div>
-          <h2 className="text-xl font-bold text-white tracking-tight">Acceso Administrador</h2>
+          <h2 className="text-xl font-bold text-white tracking-tight">Accés d'Administració</h2>
           <p className="text-xs text-slate-400 mt-1">
-            Introduce el código PIN de gestión del local
+            Introduïu el codi PIN de gestió interna
           </p>
         </div>
 
-        {/* PIN Input Form */}
+        {/* PIN Input Dots */}
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <div className="relative">
-            <div className="flex items-center justify-center gap-2 mb-2">
+            <div className="flex items-center justify-center gap-2.5 mb-2">
               {[0, 1, 2, 3].map((idx) => {
                 const filled = pin.length > idx;
                 return (
                   <div
                     key={idx}
-                    className={`w-11 h-12 rounded-xl flex items-center justify-center text-xl font-bold border transition-all ${
+                    className={`w-12 h-14 rounded-2xl flex items-center justify-center text-xl font-bold border transition-all ${
                       error
                         ? 'border-rose-500/80 bg-rose-500/10 text-rose-300'
                         : filled
-                        ? 'border-brand-500 bg-brand-500/15 text-white shadow-sm shadow-brand-500/20'
+                        ? 'border-amber-500 bg-amber-500/15 text-white shadow-sm shadow-amber-500/20'
                         : 'border-slate-700 bg-slate-800/80 text-slate-500'
                     }`}
                   >
@@ -104,20 +115,20 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                 className="text-xs text-slate-400 hover:text-slate-200 flex items-center gap-1"
               >
                 {showPin ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                {showPin ? 'Ocultar PIN' : 'Ver dígitos'}
+                {showPin ? 'Amagar PIN' : 'Veure dígits'}
               </button>
             </div>
           </div>
 
           {error && (
-            <div className="flex items-center justify-center gap-1.5 text-xs text-rose-400 bg-rose-500/10 py-1.5 px-3 rounded-lg border border-rose-500/20">
-              <AlertCircle className="w-3.5 h-3.5" />
-              <span>PIN incorrecto. Prueba con 1234</span>
+            <div className="flex items-center justify-center gap-1.5 text-xs text-rose-400 bg-rose-500/10 py-2 px-3 rounded-xl border border-rose-500/20">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>PIN incorrecte. Tornau a provar.</span>
             </div>
           )}
 
-          {/* Keypad for easy mobile touchscreen input */}
-          <div className="grid grid-cols-3 gap-2 pt-2">
+          {/* Clean Keypad */}
+          <div className="grid grid-cols-3 gap-2.5 pt-2">
             {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((digit) => (
               <button
                 key={digit}
@@ -128,13 +139,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
                 {digit}
               </button>
             ))}
-            <button
-              type="button"
-              onClick={handleBackspace}
-              className="h-12 rounded-xl bg-slate-800/60 hover:bg-slate-700 active:bg-slate-600 text-slate-400 hover:text-white font-medium text-xs flex items-center justify-center border border-slate-700/60 transition-all active:scale-95"
-            >
-              Borrar
-            </button>
+            <div />
             <button
               type="button"
               onClick={() => handleKeypadPress('0')}
@@ -144,29 +149,21 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => {
-                setPin('1234');
-                setError(false);
-              }}
-              className="h-12 rounded-xl bg-brand-500/20 hover:bg-brand-500/30 text-brand-300 font-semibold text-xs flex items-center justify-center border border-brand-500/30 transition-all active:scale-95"
-              title="Autocompletar PIN 1234"
+              onClick={handleBackspace}
+              className="h-12 rounded-xl bg-slate-800/80 hover:bg-slate-700 active:bg-slate-600 text-slate-300 font-medium text-xs flex items-center justify-center border border-slate-700/60 transition-all active:scale-95"
             >
-              PIN: 1234
+              Esborrar
             </button>
           </div>
 
           <button
             type="submit"
-            className="w-full mt-3 py-3.5 rounded-xl bg-gradient-to-r from-brand-600 to-amber-500 hover:from-brand-500 hover:to-amber-400 text-white font-bold text-sm shadow-lg shadow-brand-500/25 flex items-center justify-center gap-2 transition-all active:scale-98"
+            className="w-full mt-3 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 transition-all active:scale-98"
           >
             <KeyRound className="w-4 h-4" />
-            Entrar al Panel
+            Entrar al Tauler
           </button>
         </form>
-
-        <p className="text-center text-[11px] text-slate-500 mt-4">
-          Modo demostración: El PIN predeterminado es <span className="font-mono text-brand-400 font-bold">1234</span>
-        </p>
       </div>
     </div>
   );

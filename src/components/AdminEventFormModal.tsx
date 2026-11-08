@@ -27,8 +27,8 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
   const [externalUrl, setExternalUrl] = useState('');
   const [status, setStatus] = useState<'active' | 'inactive'>('active');
   const [category, setCategory] = useState('Música');
-  const [location, setLocation] = useState('Terraza Principal');
-  const [price, setPrice] = useState('Entrada Libre');
+  const [location, setLocation] = useState('Sala d\'Actes');
+  const [price, setPrice] = useState('Entrada lliure');
   const [capacity, setCapacity] = useState('');
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -48,21 +48,19 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
       setPrice(initialEvent.price || '');
       setCapacity(initialEvent.capacity || '');
     } else {
-      // Default creation state
       setTitle('');
       setShortDescription('');
       setLongDescription('');
-      // Default to tomorrow
       const tomorrow = new Date();
       tomorrow.setDate(tomorrow.getDate() + 1);
       setDate(tomorrow.toISOString().split('T')[0]);
       setTime('20:30');
       setImageUrl(IMAGE_PRESETS[0].url);
-      setExternalUrl('https://sagricola.es/reservas');
+      setExternalUrl('https://sagricola.es/reserves');
       setStatus('active');
       setCategory('Música');
-      setLocation('Terraza Principal');
-      setPrice('Entrada Libre');
+      setLocation('Sala d\'Actes');
+      setPrice('Entrada lliure');
       setCapacity('');
     }
     setErrors({});
@@ -72,11 +70,11 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
 
   const validate = () => {
     const errs: { [key: string]: string } = {};
-    if (!title.trim()) errs.title = 'El título es obligatorio';
-    if (!shortDescription.trim()) errs.shortDescription = 'La descripción corta es obligatoria';
-    if (!longDescription.trim()) errs.longDescription = 'La descripción detallada es obligatoria';
-    if (!date) errs.date = 'La fecha es obligatoria';
-    if (!externalUrl.trim()) errs.externalUrl = 'La URL externa es obligatoria';
+    if (!title.trim()) errs.title = 'El títol és obligatori';
+    if (!shortDescription.trim()) errs.shortDescription = 'La descripció curta és obligatòria';
+    if (!longDescription.trim()) errs.longDescription = 'La descripció detallada és obligatòria';
+    if (!date) errs.date = 'La data és obligatòria';
+    if (!externalUrl.trim()) errs.externalUrl = 'L\'enllaç extern és obligatori';
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -116,22 +114,22 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
         {/* Modal Header */}
         <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-950/60 shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-brand-500/10 text-brand-400">
+            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-400">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-lg font-bold text-white">
-                {isEditing ? 'Editar Evento' : 'Crear Nuevo Evento'}
+                {isEditing ? 'Modificar Esdeveniment' : 'Crear Nou Esdeveniment'}
               </h2>
               <p className="text-xs text-slate-400">
-                {isEditing ? 'Actualiza los datos del evento' : 'Completa la información para publicarlo'}
+                {isEditing ? 'Actualitzau la informació de l\'acte' : 'Ompliu les dades per a publicar-lo'}
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
             className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-            aria-label="Cerrar formulario"
+            aria-label="Tancar formulari"
           >
             <X className="w-5 h-5" />
           </button>
@@ -139,14 +137,14 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
 
         {/* Modal Form Scrollable */}
         <form onSubmit={handleSubmit} className="p-5 sm:p-6 overflow-y-auto space-y-4 flex-1">
-          {/* Status Switch (Active / Inactive) */}
+          {/* Status Switch */}
           <div className="p-3.5 rounded-2xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-between">
             <div>
-              <p className="text-sm font-bold text-white">Visibilidad para clientes</p>
+              <p className="text-sm font-bold text-white">Visibilitat pública</p>
               <p className="text-xs text-slate-400">
                 {status === 'active'
-                  ? 'Activo: Visible inmediatamente en los móviles de los clientes'
-                  : 'Oculto: Solo visible para administradores en este panel'}
+                  ? 'Actiu: Visible per a tothom a la web'
+                  : 'Ocult: Només visible per als administradors'}
               </p>
             </div>
             <button
@@ -167,14 +165,14 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
           {/* Title */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
-              Título del Evento *
+              Títol de l'esdeveniment *
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Ej. Noche Acústica & Jam Session"
-              className={`w-full px-4 py-3 rounded-xl bg-slate-800 border text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 ${
+              placeholder="Ex. Concert Acústic de Primavera"
+              className={`w-full px-4 py-3 rounded-xl bg-slate-800 border text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 ${
                 errors.title ? 'border-rose-500' : 'border-slate-700'
               }`}
             />
@@ -184,35 +182,35 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
           {/* Short Description */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
-              Descripción Corta (Vista de Tarjeta) *
+              Descripció curta (Vista de Targeta) *
             </label>
             <input
               type="text"
               value={shortDescription}
               onChange={(e) => setShortDescription(e.target.value)}
-              placeholder="Resumen atractivo de 1-2 líneas para la tarjeta"
+              placeholder="Resum atractiu d'1 o 2 línies per a la targeta"
               maxLength={140}
-              className={`w-full px-4 py-3 rounded-xl bg-slate-800 border text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 ${
+              className={`w-full px-4 py-3 rounded-xl bg-slate-800 border text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 ${
                 errors.shortDescription ? 'border-rose-500' : 'border-slate-700'
               }`}
             />
             {errors.shortDescription && (
               <p className="text-xs text-rose-400 mt-1">{errors.shortDescription}</p>
             )}
-            <p className="text-[11px] text-slate-500 text-right mt-1">{shortDescription.length}/140 caracteres</p>
+            <p className="text-[11px] text-slate-500 text-right mt-1">{shortDescription.length}/140 caràcters</p>
           </div>
 
           {/* Long Description */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
-              Descripción Completa (Vista de Detalle) *
+              Descripció detallada (Finestra modal) *
             </label>
             <textarea
               value={longDescription}
               onChange={(e) => setLongDescription(e.target.value)}
-              placeholder="Explica todo lo que los clientes necesitan saber: artistas, programa, sorpresas, premios..."
+              placeholder="Explicau tots els detalls: artistes, programa de l'acte, col·laboradors..."
               rows={4}
-              className={`w-full px-4 py-3 rounded-xl bg-slate-800 border text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 ${
+              className={`w-full px-4 py-3 rounded-xl bg-slate-800 border text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 ${
                 errors.longDescription ? 'border-rose-500' : 'border-slate-700'
               }`}
             />
@@ -225,14 +223,14 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-brand-400" />
-                Fecha *
+                <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                Data *
               </label>
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className={`w-full px-3.5 py-3 rounded-xl bg-slate-800 border text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 ${
+                className={`w-full px-3.5 py-3 rounded-xl bg-slate-800 border text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 ${
                   errors.date ? 'border-rose-500' : 'border-slate-700'
                 }`}
               />
@@ -241,14 +239,14 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
 
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5 text-brand-400" />
+                <Clock className="w-3.5 h-3.5 text-amber-400" />
                 Hora
               </label>
               <input
                 type="time"
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
-                className="w-full px-3.5 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full px-3.5 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
               />
             </div>
           </div>
@@ -257,15 +255,15 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-1">
-                <Tag className="w-3.5 h-3.5 text-brand-400" />
-                Categoría
+                <Tag className="w-3.5 h-3.5 text-amber-400" />
+                Categoria
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3.5 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                className="w-full px-3.5 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
               >
-                {CATEGORIES.filter((c) => c !== 'Todos').map((cat) => (
+                {CATEGORIES.filter((c) => c !== 'Tots').map((cat) => (
                   <option key={cat} value={cat}>
                     {cat}
                   </option>
@@ -275,15 +273,15 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
 
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5 text-brand-400" />
-                Ubicación
+                <MapPin className="w-3.5 h-3.5 text-amber-400" />
+                Lloc / Sala
               </label>
               <input
                 type="text"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
-                placeholder="Ej. Terraza, Barra central"
-                className="w-full px-3.5 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                placeholder="Ex. Sala d'Actes, Pati"
+                className="w-full px-3.5 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
               />
             </div>
           </div>
@@ -292,27 +290,27 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
-                Precio / Entrada
+                Preu / Entrada
               </label>
               <input
                 type="text"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                placeholder="Ej. Gratis, 12€"
-                className="w-full px-3.5 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                placeholder="Ex. De franc, 10€"
+                className="w-full px-3.5 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
               />
             </div>
 
             <div>
               <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
-                Aforo / Plazas
+                Aforament / Places
               </label>
               <input
                 type="text"
                 value={capacity}
                 onChange={(e) => setCapacity(e.target.value)}
-                placeholder="Ej. Plazas limitadas"
-                className="w-full px-3.5 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+                placeholder="Ex. Places limitades"
+                className="w-full px-3.5 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
               />
             </div>
           </div>
@@ -320,15 +318,15 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
           {/* External URL */}
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5 flex items-center gap-1">
-              <Link2 className="w-3.5 h-3.5 text-brand-400" />
-              URL Externa (Botón "Saber más / Apuntarse") *
+              <Link2 className="w-3.5 h-3.5 text-amber-400" />
+              Enllaç extern (Botó "Saber-ne més / Apuntar-se") *
             </label>
             <input
               type="text"
               value={externalUrl}
               onChange={(e) => setExternalUrl(e.target.value)}
-              placeholder="https://tupagina.com/entradas"
-              className={`w-full px-4 py-3 rounded-xl bg-slate-800 border text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 ${
+              placeholder="https://sagricola.es/entrades"
+              className={`w-full px-4 py-3 rounded-xl bg-slate-800 border text-white placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 ${
                 errors.externalUrl ? 'border-rose-500' : 'border-slate-700'
               }`}
             />
@@ -341,8 +339,8 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
           <div className="space-y-2">
             <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center justify-between">
               <span className="flex items-center gap-1">
-                <ImageIcon className="w-3.5 h-3.5 text-brand-400" />
-                Imagen de Portada (Placeholder)
+                <ImageIcon className="w-3.5 h-3.5 text-amber-400" />
+                Imatge de portada
               </span>
             </label>
 
@@ -351,12 +349,11 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
               placeholder="https://images.unsplash.com/..."
-              className="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-500 text-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
 
-            {/* Quick preset selector */}
             <div>
-              <p className="text-[11px] text-slate-400 mb-1.5 font-medium">O elige una imagen predeterminada:</p>
+              <p className="text-[11px] text-slate-400 mb-1.5 font-medium">O triau una imatge predeterminada:</p>
               <div className="grid grid-cols-3 gap-2">
                 {IMAGE_PRESETS.map((preset, idx) => (
                   <button
@@ -365,7 +362,7 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
                     onClick={() => setImageUrl(preset.url)}
                     className={`relative rounded-xl overflow-hidden border aspect-[16/10] text-left transition-all ${
                       imageUrl === preset.url
-                        ? 'border-brand-500 ring-2 ring-brand-500/50'
+                        ? 'border-amber-500 ring-2 ring-amber-500/50'
                         : 'border-slate-700 opacity-60 hover:opacity-100'
                     }`}
                   >
@@ -374,8 +371,8 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
                       {preset.label.split('/')[0]}
                     </span>
                     {imageUrl === preset.url && (
-                      <span className="absolute top-1 right-1 p-0.5 rounded-full bg-brand-500 text-white">
-                        <Check className="w-3 h-3" />
+                      <span className="absolute top-1 right-1 p-0.5 rounded-full bg-amber-500 text-slate-950 font-bold">
+                        <Check className="w-3 h-3 stroke-[3]" />
                       </span>
                     )}
                   </button>
@@ -392,14 +389,14 @@ export const AdminEventFormModal: React.FC<AdminEventFormModalProps> = ({
             onClick={onClose}
             className="flex-1 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-sm transition-colors"
           >
-            Cancelar
+            Cancel·lar
           </button>
           <button
             type="button"
             onClick={handleSubmit}
-            className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-brand-600 to-amber-500 hover:from-brand-500 hover:to-amber-400 text-white font-bold text-sm shadow-lg shadow-brand-500/20 transition-all active:scale-98"
+            className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/20 transition-all active:scale-98"
           >
-            {isEditing ? 'Guardar Cambios' : 'Publicar Evento'}
+            {isEditing ? 'Desar Canvis' : 'Publicar Esdeveniment'}
           </button>
         </div>
       </div>

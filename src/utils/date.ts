@@ -5,8 +5,8 @@ export function formatEventDate(dateString: string): string {
     if (!year || !month || !day) return dateString;
     const date = new Date(year, month - 1, day);
     
-    // Capitalize first letter
-    const formatted = new Intl.DateTimeFormat('es-ES', {
+    // Format in Mallorquín / Català de Mallorca
+    const formatted = new Intl.DateTimeFormat('ca-ES', {
       weekday: 'short',
       day: 'numeric',
       month: 'short',
@@ -25,7 +25,7 @@ export function formatEventDateFull(dateString: string): string {
     if (!year || !month || !day) return dateString;
     const date = new Date(year, month - 1, day);
     
-    const formatted = new Intl.DateTimeFormat('es-ES', {
+    const formatted = new Intl.DateTimeFormat('ca-ES', {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
@@ -50,10 +50,10 @@ export function getDaysRemainingBadge(dateString: string): { label: string; isUr
     const diffTime = eventDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    if (diffDays === 0) return { label: '¡HOY!', isUrgent: true };
-    if (diffDays === 1) return { label: 'Mañana', isUrgent: true };
-    if (diffDays > 1 && diffDays <= 7) return { label: `En ${diffDays} días`, isUrgent: false };
-    if (diffDays < 0) return { label: 'Celebrado', isUrgent: false };
+    if (diffDays === 0) return { label: 'AVUI!', isUrgent: true };
+    if (diffDays === 1) return { label: 'Demà', isUrgent: true };
+    if (diffDays > 1 && diffDays <= 7) return { label: `D'aquí a ${diffDays} dies`, isUrgent: false };
+    if (diffDays < 0) return { label: 'Ja celebrat', isUrgent: false };
     return null;
   } catch {
     return null;

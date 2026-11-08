@@ -1,16 +1,15 @@
 import { EventItem } from '../types';
 import { INITIAL_EVENTS } from '../data/initialEvents';
 
-const STORAGE_KEY = 'sagricola_events_data_v1';
-const PIN_STORAGE_KEY = 'sagricola_admin_pin_v1';
-const DEFAULT_PIN = '1234';
+const STORAGE_KEY = 'sagricola_events_data_v2';
+const PIN_STORAGE_KEY = 'sagricola_admin_pin_v2';
+const DEFAULT_PIN = '3202';
 
 export const storage = {
   getEvents: (): EventItem[] => {
     try {
       const data = localStorage.getItem(STORAGE_KEY);
       if (!data) {
-        // Initialize with default mock data
         localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_EVENTS));
         return INITIAL_EVENTS;
       }
@@ -20,7 +19,7 @@ export const storage = {
       }
       return INITIAL_EVENTS;
     } catch (e) {
-      console.error('Error loading events from localStorage:', e);
+      console.error('Error carregant esdeveniments de localStorage:', e);
       return INITIAL_EVENTS;
     }
   },
@@ -29,7 +28,7 @@ export const storage = {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
     } catch (e) {
-      console.error('Error saving events to localStorage:', e);
+      console.error('Error desant esdeveniments a localStorage:', e);
     }
   },
 
@@ -38,7 +37,7 @@ export const storage = {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_EVENTS));
       return INITIAL_EVENTS;
     } catch (e) {
-      console.error('Error resetting events:', e);
+      console.error('Error restablint esdeveniments:', e);
       return INITIAL_EVENTS;
     }
   },
@@ -49,7 +48,7 @@ export const storage = {
 
   verifyPin: (pin: string): boolean => {
     const currentPin = storage.getAdminPin();
-    return pin.trim() === currentPin.trim() || pin.trim() === '1234';
+    return pin.trim() === currentPin.trim() || pin.trim() === '3202';
   },
 
   setAdminPin: (newPin: string): void => {

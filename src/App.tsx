@@ -72,8 +72,8 @@ export const App: React.FC = () => {
     updateEventsState(updated);
     showToast(
       newStatus === 'active'
-        ? `"${target.title}" ahora es visible para los clientes`
-        : `"${target.title}" se ha ocultado del público`,
+        ? `"${target.title}" ara és visible per al públic`
+        : `"${target.title}" s'ha ocultat del públic`,
       'info'
     );
   };
@@ -86,7 +86,7 @@ export const App: React.FC = () => {
         item.id === eventId ? { ...item, ...data } : item
       );
       updateEventsState(updated);
-      showToast('Evento actualizado con éxito', 'success');
+      showToast('Acte actualitzat amb èxit', 'success');
     } else {
       // Create new
       const newEvent: EventItem = {
@@ -96,7 +96,7 @@ export const App: React.FC = () => {
       };
       const updated = [newEvent, ...events];
       updateEventsState(updated);
-      showToast('Nuevo evento publicado correctamente', 'success');
+      showToast('Nou acte publicat correctament', 'success');
     }
   };
 
@@ -106,7 +106,7 @@ export const App: React.FC = () => {
     const updated = events.filter((e) => e.id !== id);
     updateEventsState(updated);
     showToast(
-      target ? `"${target.title}" ha sido eliminado` : 'Evento eliminado',
+      target ? `"${target.title}" s'ha eliminat` : 'Acte eliminat',
       'info'
     );
   };
@@ -115,7 +115,7 @@ export const App: React.FC = () => {
   const handleResetEvents = () => {
     const initial = storage.resetEvents();
     setEvents(initial);
-    showToast('Eventos iniciales restaurados', 'success');
+    showToast('Actes inicials restablerts', 'success');
   };
 
   // PIN validation
@@ -127,13 +127,13 @@ export const App: React.FC = () => {
     setIsAdminAuthModalOpen(false);
     setViewMode('admin');
     window.location.hash = 'admin';
-    showToast('Acceso concedido al Panel de Administración', 'success');
+    showToast('Accés concedit al Tauler de Gestió', 'success');
   };
 
   const handleLogout = () => {
     setViewMode('client');
     window.location.hash = '';
-    showToast('Has salido del modo administrador', 'info');
+    showToast('Heu sortit del mode d\'administració', 'info');
   };
 
   const activeCount = events.filter((e) => e.status === 'active').length;
