@@ -3,7 +3,7 @@ import { EventItem, EventFormData, EventStatus, ViewMode, ToastMessage } from '.
 import { storage } from './services/storage';
 import { Header } from './components/Header';
 import { ClientView } from './components/ClientView';
-import { EventModal } from './components/EventModal';
+import { EventDetailPage } from './components/EventDetailPage';
 import { AdminDashboard } from './components/AdminDashboard';
 import { AdminLoginModal } from './components/AdminLoginModal';
 import { AdminEventFormModal } from './components/AdminEventFormModal';
@@ -39,17 +39,34 @@ export const App: React.FC = () => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  // Netetjar qualsevol hash antic de la URL en carregar la pàgina
+  // Gestió de navegació amb el botó enrere del navegador
   useEffect(() => {
-    if (window.location.hash) {
-      window.history.replaceState(null, '', window.location.pathname);
-    }
+    const handlePopState = () => {
+      if (!window.location.hash.startsWith('#acte')) {
+        setSelectedEvent(null);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   // Persist events whenever they change
   const updateEventsState = (newEvents: EventItem[]) => {
     setEvents(newEvents);
     storage.saveEvents(newEvents);
+  };
+
+  const handleSelectEvent = (event: EventItem) => {
+    setSelectedEvent(event);
+    window.history.pushState({ eventId: event.id }, '', `#acte-${event.id}`);
+  };
+
+  const handleBackFromDetail = () => {
+    if (window.location.hash.startsWith('#acte')) {
+      window.history.back();
+    } else {
+      setSelectedEvent(null);
+    }
   };
 
   // Status toggle handler (Activo <-> Inactivo)
@@ -134,14 +151,21 @@ export const App: React.FC = () => {
       {/* Toast notifications */}
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
 
-      {viewMode === 'client' ? (
+      {selectedEvent ? (
+        /* Full-page detail view instead of a floating modal */
+        <EventDetailPage
+          event={selectedEvent}
+          onBack={handleBackFromDetail}
+          onShowToast={showToast}
+        />
+      ) : viewMode === 'client' ? (
         <>
           {/* Mobile client view with header and vertical card feed */}
           <Header activeCount={activeCount} />
 
           <ClientView
             events={events}
-            onSelectEvent={(evt) => setSelectedEvent(evt)}
+            onSelectEvent={handleSelectEvent}
             onOpenAdminAuth={() => setIsAdminAuthModalOpen(true)}
           />
         </>
@@ -162,17 +186,10 @@ export const App: React.FC = () => {
           onBackToClientView={() => setViewMode('client')}
           onLogout={handleLogout}
           onResetEvents={handleResetEvents}
-          onPreviewEvent={(evt) => setSelectedEvent(evt)}
+          onPreviewEvent={handleSelectEvent}
           onOpenQr={() => setIsQrModalOpen(true)}
         />
       )}
-
-      {/* Event Details Modal */}
-      <EventModal
-        event={selectedEvent}
-        onClose={() => setSelectedEvent(null)}
-        onShowToast={showToast}
-      />
 
       {/* Admin PIN Login Modal */}
       <AdminLoginModal
