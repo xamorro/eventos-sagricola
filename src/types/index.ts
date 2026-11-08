@@ -8,7 +8,8 @@ export interface EventItem {
   date: string; // ISO date 'YYYY-MM-DD'
   time: string; // 'HH:MM'
   imageUrl: string;
-  externalUrl: string;
+  externalUrl?: string;
+  showExternalButton?: boolean;
   status: EventStatus;
   category: string;
   location?: string;

@@ -239,14 +239,16 @@ export const EventDetailPage: React.FC<EventDetailPageProps> = ({
 
         {/* Action buttons */}
         <div className="space-y-3 pt-2">
-          {/* Big Primary CTA */}
-          <button
-            onClick={handleExternalAction}
-            className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-600 to-brand-600 hover:from-amber-400 hover:to-brand-500 text-slate-950 font-extrabold text-base sm:text-lg shadow-xl shadow-amber-500/20 flex items-center justify-center gap-2.5 transition-all active:scale-[0.98] group"
-          >
-            <span>Saber-ne més / Apuntar-se</span>
-            <ExternalLink className="w-5 h-5 text-slate-950 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-          </button>
+          {/* Botó extern "Saber-ne més" només si està activat i té URL */}
+          {event.showExternalButton !== false && Boolean(event.externalUrl?.trim()) && (
+            <button
+              onClick={handleExternalAction}
+              className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-600 to-brand-600 hover:from-amber-400 hover:to-brand-500 text-slate-950 font-extrabold text-base sm:text-lg shadow-xl shadow-amber-500/20 flex items-center justify-center gap-2.5 transition-all active:scale-[0.98] group"
+            >
+              <span>Saber-ne més</span>
+              <ExternalLink className="w-5 h-5 text-slate-950 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </button>
+          )}
 
           {/* Secondary actions: Calendar & Share */}
           <div className="grid grid-cols-2 gap-3">
