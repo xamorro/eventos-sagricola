@@ -14,6 +14,7 @@ export const App: React.FC = () => {
   const [events, setEvents] = useState<EventItem[]>(() => storage.getEvents());
   const [viewMode, setViewMode] = useState<ViewMode>('client');
   const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false);
 
   // Modals state
   const [isAdminAuthModalOpen, setIsAdminAuthModalOpen] = useState(false);
@@ -39,8 +40,13 @@ export const App: React.FC = () => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  // Gestió de navegació amb el botó enrere del navegador
+  // Assegurar neteja d'estat inicial i suport de botó enrere
   useEffect(() => {
+    setIsAdminAuthModalOpen(false);
+    if (window.location.hash && !window.location.hash.startsWith('#acte')) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+
     const handlePopState = () => {
       if (!window.location.hash.startsWith('#acte')) {
         setSelectedEvent(null);
@@ -134,14 +140,36 @@ export const App: React.FC = () => {
   };
 
   const handleAdminLoginSuccess = () => {
+    setIsAdminAuthenticated(true);
     setIsAdminAuthModalOpen(false);
     setViewMode('admin');
     showToast('Accés concedit al Tauler de Gestió', 'success');
   };
 
-  const handleLogout = () => {
+  const handleBackToClientView = () => {
+    setIsAdminAuthModalOpen(false);
     setViewMode('client');
+    if (window.location.hash && !window.location.hash.startsWith('#acte')) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAdminAuthenticated(false);
+    setIsAdminAuthModalOpen(false);
+    setViewMode('client');
+    if (window.location.hash && !window.location.hash.startsWith('#acte')) {
+      window.history.replaceState(null, '', window.location.pathname);
+    }
     showToast('Heu sortit del mode d\'administració', 'info');
+  };
+
+  const handleOpenAdminAuth = () => {
+    if (isAdminAuthenticated) {
+      setViewMode('admin');
+    } else {
+      setIsAdminAuthModalOpen(true);
+    }
   };
 
   const activeCount = events.filter((e) => e.status === 'active').length;
@@ -166,7 +194,7 @@ export const App: React.FC = () => {
           <ClientView
             events={events}
             onSelectEvent={handleSelectEvent}
-            onOpenAdminAuth={() => setIsAdminAuthModalOpen(true)}
+            onOpenAdminAuth={handleOpenAdminAuth}
           />
         </>
       ) : (
@@ -183,7 +211,7 @@ export const App: React.FC = () => {
             setEditingEvent(null);
             setIsEventFormModalOpen(true);
           }}
-          onBackToClientView={() => setViewMode('client')}
+          onBackToClientView={handleBackToClientView}
           onLogout={handleLogout}
           onResetEvents={handleResetEvents}
           onPreviewEvent={handleSelectEvent}
